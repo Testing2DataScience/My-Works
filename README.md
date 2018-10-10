@@ -1,2 +1,2 @@
 # My-Works
-This is a repositoty of all my worksrelated to Datascience 
+This is a repositoty of all my works related to Datascience 
