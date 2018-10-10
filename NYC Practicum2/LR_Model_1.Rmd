@@ -1,0 +1,34 @@
+---
+title: "Regression Model for the Month and Hour-of-Day"
+output: html_notebook
+---
+
+Loading the data and seggregating the total demand
+
+```{r}
+nycgc_mdmnd <- read.csv('D:/ISB/Term1/PRAT2/Regression_Demand/nycgc_month_hour_demand.csv')
+colnames(nycgc_mdmnd) <- c('month','hour','demand')
+nycgc_mdmnd1 <- nycgc_mdmnd[c(1,2)]
+nycgc_mdmnd2 <- nycgc_mdmnd[c(3)]
+```
+
+Creating factors for the month & the hour-of-day. Create a final dataset
+
+```{r}
+nycgc_mdmnd11 <- fastDummies::dummy_cols(nycgc_mdmnd1,select_columns = c('month','hour'))
+nycgc_mdmnd112 <- nycgc_mdmnd11[c(3:13,15:37)]
+nycgc_mdmnd_f <- cbind(nycgc_mdmnd112,nycgc_mdmnd2)
+```
+
+Creating a linear regression model
+
+```{r}
+model1 <- lm(demand ~ ., data=nycgc_mdmnd_f)
+summary(model1)
+
+```
+
+Checking the model
+```{r}
+plot(model1)
+```
