@@ -1,0 +1,44 @@
+---
+title: "Count Data Regression"
+output: html_notebook
+---
+
+Loading the data
+
+```{r}
+nycgc_rt_mdmnd <- read.csv('D:/ISB/Term1/PRAT2/Q6-Fullout.csv')
+colnames(nycgc_rt_mdmnd) <- c('src','month','hour','totrides')
+
+summrt <- aggregate(totrides ~ ., data = nycgc_rt_mdmnd , sum)
+```
+
+Visualize the count of Total Rides
+```{r}
+hist(summrt$totrides)
+```
+
+Visualizing the count looks like a negative binomail distribution. Creating factors for the source (pickup), mont
+```{r}
+summrt2 <- fastDummies::dummy_cols(summrt,select_columns = c('src','month','hour'))
+```
+
+Subsetting the data with requsite columns and fitting the regression model with negative binomial distribution
+```{r}
+summrt3 <- subset(summrt2, select=-c(src,month,hour,src_990,month_12,hour_23))
+
+library(MASS)
+model2 <- glm.nb(totrides ~ .,data=summrt3)
+summary(model2)
+```
+
+Looking at the plots 
+```{r}
+plot(model2)
+```
+
+Looking at the accuracy of the model
+```{r}
+with(model2,cbind(res.deviance=deviance,df=df.residual,p=pchisq(deviance,df.residual,lower.tail = FALSE)))
+
+```
+
